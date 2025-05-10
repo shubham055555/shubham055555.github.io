@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pac-Man Contribution Game</title>
+  <style>
+    body {
+      background: black;
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="600" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    let pacman = { x: 50, y: 50, dx: 2, dy: 0, size: 20 };
+    let dots = [];
+
+    for (let i = 20; i < canvas.width; i += 40) {
+      for (let j = 20; j < canvas.height; j += 40) {
+        dots.push({ x: i, y: j, eaten: false });
+      }
+    }
+
+    function drawPacman() {
+      ctx.beginPath();
+      ctx.arc(pacman.x, pacman.y, pacman.size, 0.25 * Math.PI, 1.75 * Math.PI);
+      ctx.lineTo(pacman.x, pacman.y);
+      ctx.fillStyle = "yellow";
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function drawDots() {
+      for (let dot of dots) {
+        if (!dot.eaten) {
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = "white";
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+    }
+
+    function update() {
+      pacman.x += pacman.dx;
+      pacman.y += pacman.dy;
+
+      if (pacman.x > canvas.width) pacman.x = 0;
+      if (pacman.x < 0) pacman.x = canvas.width;
+      if (pacman.y > canvas.height) pacman.y = 0;
+      if (pacman.y < 0) pacman.y = canvas.height;
+
+      for (let dot of dots) {
+        let dist = Math.hypot(pacman.x - dot.x, pacman.y - dot.y);
+        if (dist < pacman.size) dot.eaten = true;
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawDots();
+      drawPacman();
+      update();
+    }
+
+    setInterval(draw, 30);
+  </script>
+</body>
+</html>
