@@ -1,4 +1,3 @@
-# shubham055555.github.io
 ### 🟡 Play My Pac-Man Contribution Game
 
 <p align="center">
